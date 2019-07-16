@@ -21,74 +21,127 @@ namespace CharsTitles
 
         private string modPath;
 
+        int e_count = 0;
+        int k_count = 0;
+        int d_count = 0;
+        int c_count = 0;
+        int b_count = 0;
+
         private void Button1_Click(object sender, EventArgs e)
         {
-            string path = this.textBox1.Text.Trim();
-            if(path != string.Empty)
+            try
             {
-                if(MessageBox.Show("There are characters in the text box, use them as path?", "Prompt", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                //ini
+                e_count = 0;
+                k_count = 0;
+                d_count = 0;
+                c_count = 0;
+                b_count = 0;
+                treeView1.Nodes.Clear();
+
+                string path = this.textBox1.Text.Trim();
+                if (path != string.Empty)
                 {
-                    if(folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                    if (MessageBox.Show("There are characters in the text box, use them as path?", "Prompt", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                    {
+                        if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            path = folderBrowserDialog1.SelectedPath;
+                            this.textBox1.Text = path;
+                        }
+                        else
+                            return;
+                    }
+                }
+                else
+                {
+                    if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                     {
                         path = folderBrowserDialog1.SelectedPath;
                         this.textBox1.Text = path;
                     }
+                    else
+                        return;
                 }
-            }
-            else
-            {
-                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                //开始读取
+                //角色 "\\history\\characters\\characters.txt"
+                lstChar.DisplayMember = "Text";
+                lstChar.ValueMember = "ID";
+                using (FileStream fs = new FileStream(path + "\\history\\characters\\characters.txt", FileMode.Open))
                 {
-                    path = folderBrowserDialog1.SelectedPath;
-                    this.textBox1.Text = path;
+                    var cs = ParadoxParser.Parse(fs, new Characters());
+                    //foreach(var c in cs.Items)
+                    //{
+                    //    lstChar.Items.Add(c);
+                    //}
+                    lstChar.DataSource = cs.Items;
                 }
-            }
-            //开始读取
-            //角色 "\\history\\characters\\characters.txt"
-            lstChar.DisplayMember = "Text";
-            lstChar.ValueMember = "ID";
-            using (FileStream fs = new FileStream(path + "\\history\\characters\\characters.txt", FileMode.Open))
-            {
-                var cs = ParadoxParser.Parse(fs, new Characters());
-                //foreach(var c in cs.Items)
-                //{
-                //    lstChar.Items.Add(c);
-                //}
-                lstChar.DataSource = cs.Items;
-            }
-            if (lstChar.Items.Count > 0)
-                lstChar.SelectedIndex = 0;
+                if (lstChar.Items.Count > 0)
+                    lstChar.SelectedIndex = 0;
 
-            //省份 "\\common\\landed_titles"
-            LandedTitles landedTitles = new LandedTitles();
-            foreach (string p in System.IO.Directory.GetFiles(path + "\\common\\landed_titles"))
-            {
-                if (p.ToLower().EndsWith(".txt"))
+                //省份 "\\common\\landed_titles"
+                Empires landedTitles = new Empires();
+                foreach (string p in System.IO.Directory.GetFiles(path + "\\common\\landed_titles"))
                 {
-                    using (FileStream fs = new FileStream(p, FileMode.Open))
+                    if (p.ToLower().EndsWith(".txt"))
                     {
-                        ParadoxParser.Parse(fs, landedTitles);
-                    }
-                }
-            }
-            var root = treeView1.Nodes.Add("World");
-            foreach(var i in landedTitles.Itmes)
-            {
-                var ee = root.Nodes.Add(i.Name);
-                foreach(var ii in i.Children)
-                {
-                    var k = ee.Nodes.Add(ii.Name);
-                    foreach(var iii in ii.Children)
-                    {
-                        var d = k.Nodes.Add(iii.Name);
-                        foreach(var iiii in iii.Children)
+                        using (FileStream fs = new FileStream(p, FileMode.Open))
                         {
-                            d.Nodes.Add(iiii.Name);
+                            ParadoxParser.Parse(fs, landedTitles);
                         }
                     }
                 }
+                var root = treeView1.Nodes.Add("World");
+                foreach (var i in landedTitles.Itmes)
+                {
+                    var ee = root.Nodes.Add(i.Name);
+                    e_count++;
+                    MakeTree(i, ee);
+                    //foreach(var ii in i.Children)
+                    //{
+                    //    var k = ee.Nodes.Add(ii.Name);
+                    //    foreach(var iii in ii.Children)
+                    //    {
+                    //        var d = k.Nodes.Add(iii.Name);
+                    //        foreach(var iiii in iii.Children)
+                    //        {
+                    //            d.Nodes.Add(iiii.Name);
+                    //        }
+                    //    }
+                    //}
+                }
+                this.groupBox2.Text = string.Format("Tiers(Total {0},Empire {1},Kingdom {2},Duchy {3},County {4},Barony {5})", e_count + k_count + d_count + c_count + b_count, e_count, k_count, d_count, c_count, b_count);
+
+                modPath = path;
             }
-            modPath = path;
+            catch
+            {
+                MessageBox.Show("Get some err :(, maybe try again.");
+            }
+        }
+
+        private void MakeTree(LandedTitle landedTitle, TreeNode node)
+        {
+            foreach(var i in landedTitle.Children)
+            {
+                MakeTree(i, node.Nodes.Add(i.Name));
+                if(i.Name.StartsWith("k_"))
+                {
+                    k_count++;
+                }
+                if (i.Name.StartsWith("d_"))
+                {
+                    d_count++;
+                }
+                if (i.Name.StartsWith("c_"))
+                {
+                    c_count++;
+                }
+                if (i.Name.StartsWith("b_"))
+                {
+                    b_count++;
+                }
+            }
         }
 
         private void Button2_Click(object sender, EventArgs e)

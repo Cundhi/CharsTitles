@@ -95,7 +95,7 @@
             this.groupBox2.Size = new System.Drawing.Size(397, 396);
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Provinces";
+            this.groupBox2.Text = "Tiers";
             // 
             // treeView1
             // 
@@ -121,6 +121,7 @@
             // 
             // txtTime
             // 
+            this.txtTime.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.txtTime.Location = new System.Drawing.Point(256, 176);
             this.txtTime.Name = "txtTime";
             this.txtTime.Size = new System.Drawing.Size(129, 21);
@@ -128,6 +129,7 @@
             // 
             // label1
             // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(215, 179);
             this.label1.Name = "label1";

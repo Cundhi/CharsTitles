@@ -16,6 +16,8 @@ namespace CharsTitles
             set;get;
         }
 
+        public LandedTitle parent;
+
         //public string Parent
         //{
         //    set;get;
@@ -28,23 +30,17 @@ namespace CharsTitles
         //}
     }
 
-    public class LandedTitles : IParadoxRead
+    public class Empires : IParadoxRead
     {
         public List<LandedTitle> Itmes = new List<LandedTitle>(); 
 
         public void TokenCallback(ParadoxParser parser, string token)
         {
-            LandedTitle c = new LandedTitle();
             if(token.StartsWith("e_"))
             {
-                c.Name = token;
-                var k = new K();
-                parser.Parse(k);
-                if (k.Name != null && k.Name != string.Empty)
-                {
-                    c.Children.Add(k);
-                }
-                this.Itmes.Add(c);
+                var e = parser.Parse(new K());
+                e.Name = token;
+                this.Itmes.Add(e);
             }
         }
 
@@ -54,12 +50,10 @@ namespace CharsTitles
             {
                 if (token.StartsWith("k_"))
                 {
-                    Name = token;
-                    var d = parser.Parse(new D());
-                    if (d.Name != null && d.Name != string.Empty)
-                    {
-                        this.Children.Add(d);
-                    }
+                    var k = parser.Parse(new D());
+                    k.Name = token;
+                    k.parent = this;
+                    this.Children.Add(k);
                 }
             }
 
@@ -69,12 +63,10 @@ namespace CharsTitles
                 {
                     if (token.StartsWith("d_"))
                     {
-                        Name = token;
-                        var c = parser.Parse(new C());
-                        if (c.Name != null && c.Name != string.Empty)
-                        {
-                            this.Children.Add(c);
-                        }
+                        var d = parser.Parse(new C());
+                        d.Name = token;
+                        d.parent = this;
+                        this.Children.Add(d);
                     }
                 }
 
@@ -84,7 +76,24 @@ namespace CharsTitles
                     {
                         if (token.StartsWith("c_"))
                         {
-                            Name = token;
+                            var c = parser.Parse(new B());
+                            c.Name = token;
+                            c.parent = this;
+                            this.Children.Add(c);
+                        }
+                    }
+
+                    public class B : LandedTitle, IParadoxRead
+                    {
+                        public void TokenCallback(ParadoxParser parser, string token)
+                        {
+                            if (token.StartsWith("b_"))
+                            {
+                                LandedTitle l = new LandedTitle();
+                                l.Name = token;
+                                l.parent = this;
+                                this.Children.Add(l);
+                            }
                         }
                     }
                 }

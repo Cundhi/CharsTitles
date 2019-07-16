@@ -87,10 +87,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CK2Utils\CKIIParsers\CKIIParsers.csproj">
-      <Project>{ffc16b80-bf7d-4860-8ed4-16e66bd86635}</Project>
-      <Name>CKIIParsers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Pdoxcl2Sharp\src\Pdoxcl2Sharp\Pdoxcl2Sharp.csproj">
       <Project>{f292a14c-e2cb-47dc-99a4-475a94691b3d}</Project>
       <Name>Pdoxcl2Sharp</Name>

@@ -30,7 +30,7 @@ namespace CharsTitles
 
     public class LandedTitles : IParadoxRead
     {
-        public static List<LandedTitle> Itmes = new List<LandedTitle>(); 
+        public List<LandedTitle> Itmes = new List<LandedTitle>(); 
 
         public void TokenCallback(ParadoxParser parser, string token)
         {
@@ -44,7 +44,7 @@ namespace CharsTitles
                 {
                     c.Children.Add(k);
                 }
-                LandedTitles.Itmes.Add(c);
+                this.Itmes.Add(c);
             }
         }
 

@@ -60,7 +60,7 @@ namespace CharsTitles
 
     public class Characters : IParadoxRead
     {
-        public static List<Character> Items = new List<Character>();
+        public List<Character> Items = new List<Character>();
 
         public void TokenCallback(ParadoxParser parser, string token)
         {
@@ -70,7 +70,7 @@ namespace CharsTitles
             {
                 c.ID = token;
                 var cn = parser.Parse(new charName());
-                if (cn != null)
+                if (cn.Name != null && cn.Name != string.Empty)
                 {
                     c.Name = cn.Name;
                 }

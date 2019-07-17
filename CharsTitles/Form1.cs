@@ -67,15 +67,18 @@ namespace CharsTitles
                 //角色 "\\history\\characters\\characters.txt"
                 lstChar.DisplayMember = "Text";
                 lstChar.ValueMember = "ID";
-                using (FileStream fs = new FileStream(path + "\\history\\characters\\characters.txt", FileMode.Open))
+                Characters characters = new Characters();
+                foreach (string p in System.IO.Directory.GetFiles(path + "\\history\\characters"))
                 {
-                    var cs = ParadoxParser.Parse(fs, new Characters());
-                    //foreach(var c in cs.Items)
-                    //{
-                    //    lstChar.Items.Add(c);
-                    //}
-                    lstChar.DataSource = cs.Items;
+                    if (p.ToLower().EndsWith(".txt"))
+                    {
+                        using (FileStream fs = new FileStream(p, FileMode.Open))
+                        {
+                            ParadoxParser.Parse(fs, characters);
+                        }
+                    }
                 }
+                lstChar.DataSource = characters.Items;
                 if (lstChar.Items.Count > 0)
                     lstChar.SelectedIndex = 0;
 
@@ -87,7 +90,14 @@ namespace CharsTitles
                     {
                         using (FileStream fs = new FileStream(p, FileMode.Open))
                         {
-                            ParadoxParser.Parse(fs, landedTitles);
+                            try
+                            {
+                                ParadoxParser.Parse(fs, landedTitles);
+                            }
+                            catch(Exception exc)
+                            {
+                                throw exc;
+                            }
                         }
                     }
                 }
@@ -114,7 +124,7 @@ namespace CharsTitles
 
                 modPath = path;
             }
-            catch
+            catch//(Exception ex)
             {
                 MessageBox.Show("Get some err :(, maybe try again.");
             }
@@ -242,6 +252,17 @@ namespace CharsTitles
                 n.Checked = parentNod.Checked;
                 CheckNodes(n);
             }
+        }
+
+        //private void Form1_SizeChanged(object sender, EventArgs e)
+        //{
+        //    this.Text = string.Format("w:{0} h{1}", this.Width, this.Height);
+        //}
+
+        private void TrackBar1_Scroll(object sender, EventArgs e)
+        {
+            this.lstChar.Font = new Font(this.lstChar.Font.FontFamily, this.trackBar1.Value);
+            this.treeView1.Font = new Font(this.treeView1.Font.FontFamily, this.trackBar1.Value);
         }
     }
 }

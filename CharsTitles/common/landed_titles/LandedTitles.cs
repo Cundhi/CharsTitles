@@ -36,11 +36,19 @@ namespace CharsTitles
 
         public void TokenCallback(ParadoxParser parser, string token)
         {
-            if(token.StartsWith("e_"))
+            try
             {
-                var e = parser.Parse(new K());
-                e.Name = token;
-                this.Itmes.Add(e);
+                if (token.StartsWith("e_"))
+                {
+                    var e = parser.Parse(new K());
+                    e.Name = token;
+                    this.Itmes.Add(e);
+                }
+            }
+            catch(Exception ex)
+            {
+                //throw ex;
+                return;
             }
         }
 
@@ -48,12 +56,20 @@ namespace CharsTitles
         {
             public void TokenCallback(ParadoxParser parser, string token)
             {
-                if (token.StartsWith("k_"))
+                try
                 {
-                    var k = parser.Parse(new D());
-                    k.Name = token;
-                    k.parent = this;
-                    this.Children.Add(k);
+                    if (token.StartsWith("k_"))
+                    {
+                        var k = parser.Parse(new D());
+                        k.Name = token;
+                        k.parent = this;
+                        this.Children.Add(k);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    //throw ex;
+                    return;
                 }
             }
 
@@ -61,12 +77,20 @@ namespace CharsTitles
             {
                 public void TokenCallback(ParadoxParser parser, string token)
                 {
-                    if (token.StartsWith("d_"))
+                    try
                     {
-                        var d = parser.Parse(new C());
-                        d.Name = token;
-                        d.parent = this;
-                        this.Children.Add(d);
+                        if (token.StartsWith("d_"))
+                        {
+                            var d = parser.Parse(new C());
+                            d.Name = token;
+                            d.parent = this;
+                            this.Children.Add(d);
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        //throw ex;
+                        return;
                     }
                 }
 
@@ -74,12 +98,20 @@ namespace CharsTitles
                 {
                     public void TokenCallback(ParadoxParser parser, string token)
                     {
-                        if (token.StartsWith("c_"))
+                        try
                         {
-                            var c = parser.Parse(new B());
-                            c.Name = token;
-                            c.parent = this;
-                            this.Children.Add(c);
+                            if (token.StartsWith("c_"))
+                            {
+                                var c = parser.Parse(new B());
+                                c.Name = token;
+                                c.parent = this;
+                                this.Children.Add(c);
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            //throw ex;
+                            return;
                         }
                     }
 
@@ -87,12 +119,20 @@ namespace CharsTitles
                     {
                         public void TokenCallback(ParadoxParser parser, string token)
                         {
-                            if (token.StartsWith("b_"))
+                            try
                             {
-                                LandedTitle l = new LandedTitle();
-                                l.Name = token;
-                                l.parent = this;
-                                this.Children.Add(l);
+                                if (token.StartsWith("b_"))
+                                {
+                                    LandedTitle l = new LandedTitle();
+                                    l.Name = token;
+                                    l.parent = this;
+                                    this.Children.Add(l);
+                                }
+                            }
+                            catch(Exception ex)
+                            {
+                                //throw ex;
+                                return;
                             }
                         }
                     }
